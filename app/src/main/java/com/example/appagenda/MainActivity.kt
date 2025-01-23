@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -53,35 +54,25 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val bdd = BDDAgenda(this)
+        val dbHelper = RegistroDBHelper(this)
+
+        bdd.onUpgrade(bdd.writableDatabase, 0, 0)
+
+        registros.addAll(dbHelper.getRegistros())
+
         // Registrar launcher
         val fichaLauncher = createFichaLauncher()
-
-        // Inicializar registros
-        val fechaPorDefecto = "2025-01-01 00:00"
-        registros.addAll(
-            listOf(
-                EntRegistro(1, "Nombre1", "Descripcion1", fechaPorDefecto),
-                EntRegistro(2, "Nombre2", "Descripcion2", fechaPorDefecto),
-                EntRegistro(3, "Nombre3", "Descripcion3", fechaPorDefecto),
-                EntRegistro(4, "Nombre4", "Descripcion4", fechaPorDefecto),
-                EntRegistro(5, "Nombre5", "Descripcion5", fechaPorDefecto),
-                EntRegistro(6, "Nombre6", "Descripcion6", fechaPorDefecto),
-                EntRegistro(7, "Nombre7", "Descripcion7", fechaPorDefecto),
-                EntRegistro(8, "Nombre8", "Descripcion8", fechaPorDefecto),
-                EntRegistro(9, "Nombre9", "Descripcion9", fechaPorDefecto),
-                EntRegistro(10, "Nombre10", "Descripcion10", fechaPorDefecto),
-                EntRegistro(11, "Nombre11", "Descripcion11", fechaPorDefecto),
-                EntRegistro(12, "Nombre12", "Descripcion12", fechaPorDefecto)
-            )
-        )
 
         // Configurar contenido
         setContent {
             AppAgendaTheme {
                 Surface {
-                    Column(Modifier
-                        .fillMaxSize()
-                        .padding(10.dp)) {
+                    Column(
+                        Modifier
+                            .fillMaxSize()
+                            .padding(10.dp)
+                    ) {
                         Titulo("ESTA ES TU AGENDA")
                         ListaDeElementos(registros, itemClickado = { registro ->
                             val intentFicha = Intent(this@MainActivity, FichaElemento::class.java)
@@ -92,65 +83,74 @@ class MainActivity : ComponentActivity() {
 
                             fichaLauncher.launch(intentFicha) // Abrir actividad de edición
                         })
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(50.dp),
+                            verticalAlignment = Alignment.Bottom,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Button(
+                                onClick = {
+                                    val intentFicha = Intent(this@MainActivity, FichaElemento::class.java)
+                                    intentFicha.putExtra("id", 0)
+
+                                    fichaLauncher.launch(intentFicha) // Abrir actividad de edición
+                                }
+                            ) {
+                                Text("NUEVO EVENTO")
+                            }
+
+                        }
+                        }
                     }
                 }
             }
         }
-    }
 
-    // Función para registrar y manejar el resultado de FichaElemento
-    private fun createFichaLauncher() =
-        registerForActivityResult(
-            androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-            if (result.resultCode == RESULT_OK) {
-                handleFichaResult(result.data)
+        // Función para registrar y manejar el resultado de FichaElemento
+        private fun createFichaLauncher() =
+            registerForActivityResult(
+                androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+            ) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    handleFichaResult(result.data)
+                }
             }
-        }
 
-    // Función para manejar los datos devueltos por FichaElemento
-    private fun handleFichaResult(intent: Intent?) {
-        val idActualizado = intent?.getIntExtra("id", -1)
-        val nombreActualizado = intent?.getStringExtra("nombreGuardado").orEmpty()
-        val descripcionActualizada = intent?.getStringExtra("descripcionGuardada").orEmpty()
-        val fechaHoraActualizada = intent?.getStringExtra("fechaHoraGuardada").orEmpty()
+        // Función para manejar los datos devueltos por FichaElemento
+        private fun handleFichaResult(intent: Intent?) {
+            val idActualizado = intent?.getIntExtra("id", -1)
+            val nombreActualizado = intent?.getStringExtra("nombreGuardado").orEmpty()
+            val descripcionActualizada = intent?.getStringExtra("descripcionGuardada").orEmpty()
+            val fechaHoraActualizada = intent?.getStringExtra("fechaHoraGuardada").orEmpty()
 
-        val idAEliminar = intent?.getIntExtra("idAEliminar", -1)
+            val idAEliminar = intent?.getIntExtra("idAEliminar", -1)
 
 
-        if (idAEliminar != null && idAEliminar != -1) {
-            for (item in registros) {
-                if (item.codigoRegistro == idAEliminar) {
-                    registros.remove(item)
-                    break
+            if (idAEliminar != null && idAEliminar != -1) {
+                for (item in registros) {
+                    if (item.codigoRegistro == idAEliminar) {
+                        registros.remove(item)
+                        break
+                    }
+                }
+            }
+
+            if (idActualizado != null && idActualizado != -1) {
+                val index = registros.indexOfFirst { it.codigoRegistro == idActualizado }
+                if (index != -1) {
+                    registros[index] = registros[index].copy(
+                        nombre = nombreActualizado,
+                        descripcion = descripcionActualizada,
+                        fecha = fechaHoraActualizada
+                    )
                 }
             }
         }
 
-        if (idActualizado != null && idActualizado != -1) {
-            val index = registros.indexOfFirst { it.codigoRegistro == idActualizado }
-            if (index != -1) {
-                registros[index] = registros[index].copy(
-                    nombre = nombreActualizado,
-                    descripcion = descripcionActualizada,
-                    fecha = fechaHoraActualizada
-                )
-            }
-        }
-    }
 
-    //Funcion para eliminar un elemento de la lista
-    private fun eliminarElemento(intent: Intent?) {
-        val idEncontrado = intent?.getIntExtra("id", -1)
-
-        if (idEncontrado != null && idEncontrado != -1) {
-            val index = registros.indexOfFirst { it.codigoRegistro == idEncontrado }
-            if (index != -1) {
-                registros.removeAt(index)
-            }
-        }
     }
-}
 
 
 

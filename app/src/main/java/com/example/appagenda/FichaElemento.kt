@@ -37,6 +37,8 @@ class FichaElemento : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val helper: RegistroDBHelper = RegistroDBHelper(this)
+
         val codigo = intent.getIntExtra("id", -1)
         val nombreIntent = intent.getStringExtra("nombre")
         val descripcion = intent.getStringExtra("descripcion")
@@ -68,16 +70,28 @@ class FichaElemento : ComponentActivity() {
                             fechaHora.orEmpty(),
                             onValueChange = { newDateTime -> fechaHora = newDateTime }
                         )
+                        val registro = fechaHora?.let {
+                            descripcionValor?.let { it1 ->
+                                nombre?.let { it2 ->
+                                    EntRegistro(codigo, it2, it1,
+                                        it
+                                    )
+                                }
+                            }
+                        }
 
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                             Button(
                                 onClick = {
                                     val resultIntent = Intent()
 
-                                    resultIntent.putExtra("id", codigo)
-                                    resultIntent.putExtra("nombreGuardado", nombre)
-                                    resultIntent.putExtra("descripcionGuardada", descripcionValor)
-                                    resultIntent.putExtra("fechaHoraGuardada", fechaHora)
+                                    if (registro != null){
+                                        if (registro.codigoRegistro > 0){
+                                            helper.actualizarRegistro(registro)
+                                        }else{
+                                            registro.codigoRegistro = helper.insertarRegistro(registro).toInt()
+                                        }
+                                    }
 
                                     setResult(RESULT_OK, resultIntent)
                                     finish() // Cierra la actividad
