@@ -86,8 +86,10 @@ fun Titulo(titulo: String) {
 @Composable
 fun ListaDeElementos(registros: List<EntRegistro>, itemClickado: (EntRegistro) -> Unit) {
     LazyColumn {
-        items(registros) { registro ->
-            Elemento(registro, itemClickado)
+        items(registros, key = { it.codigoRegistro }) { registro ->
+            Column(){
+                Elemento(registro, itemClickado)
+            }
         }
     }
 }
@@ -104,10 +106,9 @@ fun Elemento(registro: EntRegistro, itemClickado: (EntRegistro) -> Unit) {
                 .weight(1f)
         ) {
 
-            Text(text = registro.codigoRegistro.toString())
             Text(text = registro.nombre)
             Text(text = registro.descripcion)
-            Text(text = registro.fecha.toString())
+            Text(text = registro.fecha)
         }
     }
 }

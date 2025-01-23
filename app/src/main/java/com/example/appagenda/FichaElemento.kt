@@ -35,44 +35,62 @@ import com.example.appagenda.ui.theme.AppAgendaTheme
 class FichaElemento : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        val codigo = intent.getIntExtra("id", -1)
+        val nombreIntent = intent.getStringExtra("nombre")
+        val descripcion = intent.getStringExtra("descripcion")
+        val fechaYHora = intent.getStringExtra("fechaHora")
+
         setContent {
             AppAgendaTheme {
                 Surface {
-                    val nombreIntent = intent.getStringExtra("nombre")
-                    val descripcion = intent.getStringExtra("descripcion")
-                    val fechaYHora = intent.getStringExtra("fechaHora")
-
                     var nombre by rememberSaveable { mutableStateOf(nombreIntent) }
                     var descripcionValor by rememberSaveable { mutableStateOf(descripcion) }
                     var fechaHora by rememberSaveable { mutableStateOf(fechaYHora) }
+                    Column(
+                        Modifier.fillMaxSize().padding(10.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Titulo("EDITAR EVENTO")
+                        Texto(
+                            name = nombre.orEmpty(),
+                            labelName = "Nombre del evento",
+                            onValueChange = { nombre = it }
+                        )
+                        TextoLargo(
+                            name = descripcionValor.orEmpty(),
+                            labelName = "Descripción del evento",
+                            onValueChange = { descripcionValor = it }
+                        )
+                        DateTimeField(
+                            fechaHora.orEmpty(),
+                            onValueChange = { newDateTime -> fechaHora = newDateTime }
+                        )
 
-                    Column(Modifier.fillMaxSize().padding(10.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                        Titulo("AÑADE UN EVENTO")
-                        Texto(name = nombre.toString(), labelName = "Dime el nombre del evento", onValueChange = {nombre = it})
-                        TextoLargo(name = descripcionValor.toString(), labelName = "Dime la descripcion del evento", onValueChange = {descripcionValor = it})
-                        DateTimeField(fechaHora.toString(), onValueChange = {newDateTime -> fechaHora = newDateTime})
-
-                        Row (Modifier.fillMaxWidth(), Arrangement.Center){
-                            Button(
-                                onClick = { /*TODO*/ },
-                                modifier = Modifier.padding(10.dp)
-                            ) {
-                                Text(text = "Guardar")
-                            }
-                            Button(
-                                onClick = { startActivity(Intent(this@FichaElemento, MainActivity::class.java)) },
-                                modifier = Modifier.padding(10.dp)
-                            ) {
-                                Text(text = "Volver")
-                            }
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                             Button(
                                 onClick = {
+                                    val resultIntent = Intent()
 
+                                    resultIntent.putExtra("id", codigo)
+                                    resultIntent.putExtra("nombreGuardado", nombre)
+                                    resultIntent.putExtra("descripcionGuardada", descripcionValor)
+                                    resultIntent.putExtra("fechaHoraGuardada", fechaHora)
+
+                                    setResult(RESULT_OK, resultIntent)
+                                    finish() // Cierra la actividad
                                 },
                                 modifier = Modifier.padding(10.dp)
                             ) {
-                                Text(text = "Eliminar")
+                                Text("Guardar")
+                            }
+
+                            Button(
+                                onClick = { finish() }, // Cierra sin guardar
+                                modifier = Modifier.padding(10.dp)
+                            ) {
+                                Text("Cancelar")
                             }
                         }
                     }
@@ -81,4 +99,5 @@ class FichaElemento : ComponentActivity() {
         }
     }
 }
+
 

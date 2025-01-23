@@ -6,13 +6,13 @@ data class EntRegistro(
     var codigoRegistro: Int = 0, // Se inicializa con 0 por defecto
     var nombre: String,
     var descripcion: String,
-    var fecha: Date,
+    var fecha: String,
 
 ) {
     constructor(
         nombre: String,
         descripcion: String,
-        fecha: Date,
+        fecha: String,
     ) : this(0, nombre, descripcion, fecha ) // Constructor secundario
 
     override fun toString(): String {
