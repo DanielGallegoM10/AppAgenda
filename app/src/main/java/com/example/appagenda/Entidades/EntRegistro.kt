@@ -1,9 +1,7 @@
 package com.example.appagenda.Entidades
 
-import java.util.Date
-
 data class EntRegistro(
-    var codigoRegistro: Int = 0, // Se inicializa con 0 por defecto
+    var codigoRegistro: Int = 0,
     var nombre: String,
     var descripcion: String,
     var fecha: String,
@@ -13,7 +11,7 @@ data class EntRegistro(
         nombre: String,
         descripcion: String,
         fecha: String,
-    ) : this(0, nombre, descripcion, fecha ) // Constructor secundario
+    ) : this(0, nombre, descripcion, fecha )
 
     override fun toString(): String {
         return "Registro(codigoRegistro=$codigoRegistro, nombre='$nombre', descripcion='$descripcion', fecha=$fecha)"

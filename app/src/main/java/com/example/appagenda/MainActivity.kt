@@ -79,7 +79,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppAgendaTheme {
                 Surface {
-                    Column(Modifier.fillMaxSize().padding(10.dp)) {
+                    Column(Modifier
+                        .fillMaxSize()
+                        .padding(10.dp)) {
                         Titulo("ESTA ES TU AGENDA")
                         ListaDeElementos(registros, itemClickado = { registro ->
                             val intentFicha = Intent(this@MainActivity, FichaElemento::class.java)
@@ -87,6 +89,7 @@ class MainActivity : ComponentActivity() {
                             intentFicha.putExtra("nombre", registro.nombre)
                             intentFicha.putExtra("descripcion", registro.descripcion)
                             intentFicha.putExtra("fechaHora", registro.fecha)
+
                             fichaLauncher.launch(intentFicha) // Abrir actividad de edición
                         })
                     }
@@ -112,6 +115,18 @@ class MainActivity : ComponentActivity() {
         val descripcionActualizada = intent?.getStringExtra("descripcionGuardada").orEmpty()
         val fechaHoraActualizada = intent?.getStringExtra("fechaHoraGuardada").orEmpty()
 
+        val idAEliminar = intent?.getIntExtra("idAEliminar", -1)
+
+
+        if (idAEliminar != null && idAEliminar != -1) {
+            for (item in registros) {
+                if (item.codigoRegistro == idAEliminar) {
+                    registros.remove(item)
+                    break
+                }
+            }
+        }
+
         if (idActualizado != null && idActualizado != -1) {
             val index = registros.indexOfFirst { it.codigoRegistro == idActualizado }
             if (index != -1) {
@@ -123,7 +138,20 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    //Funcion para eliminar un elemento de la lista
+    private fun eliminarElemento(intent: Intent?) {
+        val idEncontrado = intent?.getIntExtra("id", -1)
+
+        if (idEncontrado != null && idEncontrado != -1) {
+            val index = registros.indexOfFirst { it.codigoRegistro == idEncontrado }
+            if (index != -1) {
+                registros.removeAt(index)
+            }
+        }
+    }
 }
+
 
 
 

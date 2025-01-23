@@ -30,6 +30,7 @@ import com.example.appagenda.Componentes.DateTimeField
 import com.example.appagenda.Componentes.Texto
 import com.example.appagenda.Componentes.TextoLargo
 import com.example.appagenda.Componentes.Titulo
+import com.example.appagenda.Entidades.EntRegistro
 import com.example.appagenda.ui.theme.AppAgendaTheme
 
 class FichaElemento : ComponentActivity() {
@@ -91,6 +92,20 @@ class FichaElemento : ComponentActivity() {
                                 modifier = Modifier.padding(10.dp)
                             ) {
                                 Text("Cancelar")
+                            }
+
+                            Button(
+                                onClick = {
+                                    val resultIntent = Intent()
+
+                                    resultIntent.putExtra("idAEliminar", codigo)
+
+                                    setResult(RESULT_OK, resultIntent)
+                                    finish() // Cierra la actividad
+                                },
+                                modifier = Modifier.padding(10.dp)
+                            ) {
+                                Text("Eliminar")
                             }
                         }
                     }
