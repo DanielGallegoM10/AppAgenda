@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +24,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -51,7 +53,7 @@ class FichaElemento : ComponentActivity() {
                     var descripcionValor by rememberSaveable { mutableStateOf(descripcion) }
                     var fechaHora by rememberSaveable { mutableStateOf(fechaYHora) }
                     Column(
-                        Modifier.fillMaxSize().padding(10.dp),
+                        Modifier.fillMaxSize().background(Color.Cyan),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
@@ -70,20 +72,20 @@ class FichaElemento : ComponentActivity() {
                             fechaHora.orEmpty(),
                             onValueChange = { newDateTime -> fechaHora = newDateTime }
                         )
-                        val registro = fechaHora?.let {
-                            descripcionValor?.let { it1 ->
-                                nombre?.let { it2 ->
-                                    EntRegistro(codigo, it2, it1,
-                                        it
-                                    )
-                                }
-                            }
-                        }
+
 
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                             Button(
                                 onClick = {
                                     val resultIntent = Intent()
+
+                                    val registro = fechaHora?.let {
+                                        descripcionValor?.let { it1 ->
+                                            nombre?.let { it2 ->
+                                                EntRegistro(codigo, it2, it1, it)
+                                            }
+                                        }
+                                    }
 
                                     if (registro != null){
                                         if (registro.codigoRegistro > 0){
@@ -91,6 +93,10 @@ class FichaElemento : ComponentActivity() {
                                         }else{
                                             registro.codigoRegistro = helper.insertarRegistro(registro).toInt()
                                         }
+                                        resultIntent.putExtra("id", registro.codigoRegistro)
+                                        resultIntent.putExtra("nombreGuardado", registro.nombre)
+                                        resultIntent.putExtra("descripcionGuardada", registro.descripcion)
+                                        resultIntent.putExtra("fechaHoraGuardada", registro.fecha)
                                     }
 
                                     setResult(RESULT_OK, resultIntent)
@@ -113,6 +119,8 @@ class FichaElemento : ComponentActivity() {
                                     val resultIntent = Intent()
 
                                     resultIntent.putExtra("idAEliminar", codigo)
+
+                                    helper.borrarRegistro(codigo)
 
                                     setResult(RESULT_OK, resultIntent)
                                     finish() // Cierra la actividad

@@ -179,6 +179,11 @@ fun DateTimeField(selectedDateTime: String, onValueChange: (String) -> Unit) {
 }
 
 
+@Composable
+fun ToolBar() {
+
+}
+
 @Preview(showBackground = true)
 @Composable
 fun VerComponentes() {
@@ -205,8 +210,10 @@ fun VerComponentes() {
 //        )
 //        Titulo("ESTA ES TU AGENDA")
 //        ListaDeElementos(registros, itemClickado = {})
-            var name by rememberSaveable { mutableStateOf("") }
-            TextoLargo(name = name, labelName = "Dime el nombre del evento", onValueChange = {})
+//                var name by rememberSaveable { mutableStateOf("") }
+//                TextoLargo(name = name, labelName = "Dime el nombre del evento", onValueChange = {})
+
+            ToolBar()
         }
 
 

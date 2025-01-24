@@ -7,6 +7,8 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +35,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -57,7 +60,6 @@ class MainActivity : ComponentActivity() {
         val bdd = BDDAgenda(this)
         val dbHelper = RegistroDBHelper(this)
 
-        bdd.onUpgrade(bdd.writableDatabase, 0, 0)
 
         registros.addAll(dbHelper.getRegistros())
 
@@ -71,9 +73,33 @@ class MainActivity : ComponentActivity() {
                     Column(
                         Modifier
                             .fillMaxSize()
-                            .padding(10.dp)
+
+                            .background(Color.Cyan)
                     ) {
-                        Titulo("ESTA ES TU AGENDA")
+
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(100.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Titulo("MY AGENDA")
+                        }
+                        Row (Modifier
+                            .fillMaxWidth()
+                            .height(30.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.Top){
+                            Text(
+                                text = "Añade aqui tus eventos",
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
+                                fontFamily = FontFamily.Serif ,
+                            )
+                        }
+
                         ListaDeElementos(registros, itemClickado = { registro ->
                             val intentFicha = Intent(this@MainActivity, FichaElemento::class.java)
                             intentFicha.putExtra("id", registro.codigoRegistro)
@@ -85,14 +111,16 @@ class MainActivity : ComponentActivity() {
                         })
                         Row(
                             Modifier
-                                .fillMaxWidth()
-                                .height(50.dp),
+                                .fillMaxSize()
+                                .height(50.dp)
+                                .padding(30.dp),
                             verticalAlignment = Alignment.Bottom,
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Button(
                                 onClick = {
-                                    val intentFicha = Intent(this@MainActivity, FichaElemento::class.java)
+                                    val intentFicha =
+                                        Intent(this@MainActivity, FichaElemento::class.java)
                                     intentFicha.putExtra("id", 0)
 
                                     fichaLauncher.launch(intentFicha) // Abrir actividad de edición
@@ -102,55 +130,62 @@ class MainActivity : ComponentActivity() {
                             }
 
                         }
-                        }
                     }
                 }
             }
         }
+    }
 
-        // Función para registrar y manejar el resultado de FichaElemento
-        private fun createFichaLauncher() =
-            registerForActivityResult(
-                androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
-            ) { result ->
-                if (result.resultCode == RESULT_OK) {
-                    handleFichaResult(result.data)
-                }
+    // Función para registrar y manejar el resultado de FichaElemento
+    private fun createFichaLauncher() =
+        registerForActivityResult(
+            androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                handleFichaResult(result.data)
             }
+        }
 
-        // Función para manejar los datos devueltos por FichaElemento
-        private fun handleFichaResult(intent: Intent?) {
-            val idActualizado = intent?.getIntExtra("id", -1)
-            val nombreActualizado = intent?.getStringExtra("nombreGuardado").orEmpty()
-            val descripcionActualizada = intent?.getStringExtra("descripcionGuardada").orEmpty()
-            val fechaHoraActualizada = intent?.getStringExtra("fechaHoraGuardada").orEmpty()
+    // Función para manejar los datos devueltos por FichaElemento
+    private fun handleFichaResult(intent: Intent?) {
+        val idActualizado = intent?.getIntExtra("id", -1)
+        val nombreActualizado = intent?.getStringExtra("nombreGuardado").orEmpty()
+        val descripcionActualizada = intent?.getStringExtra("descripcionGuardada").orEmpty()
+        val fechaHoraActualizada = intent?.getStringExtra("fechaHoraGuardada").orEmpty()
 
-            val idAEliminar = intent?.getIntExtra("idAEliminar", -1)
+        val idAEliminar = intent?.getIntExtra("idAEliminar", -1)
 
+        // Si se solicita eliminar un registro
+        if (idAEliminar != null && idAEliminar != -1) {
+            registros.removeAll { it.codigoRegistro == idAEliminar }
+        }
 
-            if (idAEliminar != null && idAEliminar != -1) {
-                for (item in registros) {
-                    if (item.codigoRegistro == idAEliminar) {
-                        registros.remove(item)
-                        break
-                    }
-                }
-            }
-
-            if (idActualizado != null && idActualizado != -1) {
-                val index = registros.indexOfFirst { it.codigoRegistro == idActualizado }
-                if (index != -1) {
-                    registros[index] = registros[index].copy(
+        // Si hay un registro actualizado o nuevo
+        if (idActualizado != null && idActualizado > 0) {
+            val index = registros.indexOfFirst { it.codigoRegistro == idActualizado }
+            if (index != -1) {
+                // Actualiza un registro existente
+                registros[index] = registros[index].copy(
+                    nombre = nombreActualizado,
+                    descripcion = descripcionActualizada,
+                    fecha = fechaHoraActualizada
+                )
+            } else {
+                // Agrega un nuevo registro
+                registros.add(
+                    EntRegistro(
+                        codigoRegistro = idActualizado,
                         nombre = nombreActualizado,
                         descripcion = descripcionActualizada,
                         fecha = fechaHoraActualizada
                     )
-                }
+                )
             }
         }
-
-
     }
+
+
+}
 
 
 

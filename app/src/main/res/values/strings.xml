@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">AppAgenda</string>
+    <string name="app_name">My Agenda</string>
     <string name="title_activity_ficha_elemento">FichaElemento</string>
 </resources>
