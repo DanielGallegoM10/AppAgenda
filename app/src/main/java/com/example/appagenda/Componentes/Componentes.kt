@@ -2,6 +2,11 @@ package com.example.appagenda.Componentes
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,10 +16,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.Visibility
+import androidx.compose.material.icons.rounded.VisibilityOff
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.mutableStateOf
@@ -29,14 +42,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.googlefonts.Font
+import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.coerceAtLeast
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.appagenda.Entidades.EntRegistro
+import com.example.appagenda.R
 import java.sql.Date
 import java.util.Calendar
 
@@ -52,7 +70,7 @@ fun Titulo(titulo: String) {
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
-            fontFamily = FontFamily.Cursive,
+            fontFamily = FontFamily.SansSerif,
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -87,7 +105,7 @@ fun Titulo(titulo: String) {
 fun ListaDeElementos(registros: List<EntRegistro>, itemClickado: (EntRegistro) -> Unit) {
     LazyColumn {
         items(registros, key = { it.codigoRegistro }) { registro ->
-            Column(){
+            Column() {
                 Elemento(registro, itemClickado)
             }
         }
@@ -96,21 +114,66 @@ fun ListaDeElementos(registros: List<EntRegistro>, itemClickado: (EntRegistro) -
 
 @Composable
 fun Elemento(registro: EntRegistro, itemClickado: (EntRegistro) -> Unit) {
-    Row(Modifier
-        .fillMaxWidth()
-        .height(100.dp)
-        .clickable { itemClickado(registro) }) {
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        ) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    val extraPadding by animateDpAsState(
+        if (expanded) 48.dp else 0.dp, animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        )
+    )
 
-            Text(text = registro.nombre)
-            Text(text = registro.descripcion)
-            Text(text = registro.fecha)
+    Surface(
+        color = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp).clickable {
+            itemClickado(registro)
+        }
+    ) {
+        Row(modifier = Modifier.padding(24.dp)) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(bottom = extraPadding.coerceAtLeast(0.dp))
+            ) {
+                Text(text = registro.nombre, fontSize = 20.sp)
+                Text(
+                    text = registro.fecha, style = MaterialTheme.typography.headlineMedium.copy(
+                        fontWeight = FontWeight.ExtraBold
+                    )
+                )
+                if (expanded) {
+                    Text(
+                        text = registro.descripcion, // Asegúrate de que 'registro' tenga este campo
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+            }
+            if (!expanded) {
+                Icon(
+                    imageVector = Icons.Rounded.Visibility,
+                    contentDescription = "Ver mas",
+                    Modifier
+                        .height(50.dp)
+                        .width(40.dp)
+                        .clickable {
+                            expanded = !expanded
+                        }
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Rounded.VisibilityOff,
+                    contentDescription = "Ver mas",
+                    Modifier
+                        .height(50.dp)
+                        .width(40.dp)
+                        .clickable {
+                            expanded = !expanded
+                        }
+                )
+            }
         }
     }
+
 }
 
 @Composable
@@ -179,11 +242,6 @@ fun DateTimeField(selectedDateTime: String, onValueChange: (String) -> Unit) {
 }
 
 
-@Composable
-fun ToolBar() {
-
-}
-
 @Preview(showBackground = true)
 @Composable
 fun VerComponentes() {
@@ -194,7 +252,7 @@ fun VerComponentes() {
                 .padding(10.dp)
         ) {
 //        val registros = listOf(
-//            EntRegistro(1, "Nombre1", "Descripcion1", java.util.Date()),
+            val registro = EntRegistro(1, "Nombre1", "Descripcion1", "20-10-2025 20:00")
 //            EntRegistro(2, "Nombre2", "Descripcion2", java.util.Date()),
 //            EntRegistro(3, "Nombre3", "Descripcion3", java.util.Date()),
 //            EntRegistro(4, "Nombre4", "Descripcion4", java.util.Date()),
@@ -212,8 +270,7 @@ fun VerComponentes() {
 //        ListaDeElementos(registros, itemClickado = {})
 //                var name by rememberSaveable { mutableStateOf("") }
 //                TextoLargo(name = name, labelName = "Dime el nombre del evento", onValueChange = {})
-
-            ToolBar()
+            Elemento(registro, itemClickado = {})
         }
 
 

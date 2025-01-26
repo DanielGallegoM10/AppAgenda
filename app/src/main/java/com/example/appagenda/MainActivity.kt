@@ -91,13 +91,17 @@ class MainActivity : ComponentActivity() {
                             .height(30.dp),
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.Top){
-                            Text(
-                                text = "Añade aqui tus eventos",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center,
-                                fontFamily = FontFamily.Serif ,
-                            )
+
+                            if (registros.isEmpty()){
+                                Text(
+                                    text = "Añade aqui tus eventos",
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.Center,
+                                    fontFamily = FontFamily.Serif ,
+                                )
+                            }
+
                         }
 
                         ListaDeElementos(registros, itemClickado = { registro ->

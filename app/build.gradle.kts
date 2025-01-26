@@ -41,6 +41,8 @@ android {
 }
 
 dependencies {
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.5.1")
+    implementation ("androidx.compose.material:material-icons-extended:1.7.6")
     implementation (files("libs/GestionAgenda.jar"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
