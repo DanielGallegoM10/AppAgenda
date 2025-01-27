@@ -41,6 +41,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -68,6 +69,24 @@ fun Titulo(titulo: String) {
         Text(
             text = titulo,
             fontSize = 40.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            fontFamily = FontFamily.SansSerif,
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
+}
+
+@Composable
+fun TituloFicha(titulo: String) {
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .height(60.dp), Arrangement.Center, Alignment.CenterVertically
+    ) {
+        Text(
+            text = titulo,
+            fontSize = 25.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             fontFamily = FontFamily.SansSerif,

@@ -10,6 +10,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,11 +20,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.AddBox
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -68,13 +74,12 @@ class MainActivity : ComponentActivity() {
 
         // Configurar contenido
         setContent {
-            AppAgendaTheme {
+            AppAgendaTheme (dynamicColor = false){
                 Surface {
                     Column(
                         Modifier
                             .fillMaxSize()
 
-                            .background(Color.Cyan)
                     ) {
 
                         Row(
@@ -119,19 +124,19 @@ class MainActivity : ComponentActivity() {
                                 .height(50.dp)
                                 .padding(30.dp),
                             verticalAlignment = Alignment.Bottom,
-                            horizontalArrangement = Arrangement.Center
+                            horizontalArrangement = Arrangement.End
                         ) {
-                            Button(
-                                onClick = {
+                            Icon(
+                                imageVector = Icons.Rounded.AddBox,
+                                contentDescription = "Añadir",
+                                Modifier.size(70.dp).clickable {
                                     val intentFicha =
                                         Intent(this@MainActivity, FichaElemento::class.java)
                                     intentFicha.putExtra("id", 0)
 
                                     fichaLauncher.launch(intentFicha) // Abrir actividad de edición
                                 }
-                            ) {
-                                Text("NUEVO EVENTO")
-                            }
+                            )
 
                         }
                     }

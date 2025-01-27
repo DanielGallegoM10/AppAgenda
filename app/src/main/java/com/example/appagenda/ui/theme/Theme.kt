@@ -9,35 +9,38 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = DarkPrimary,
+    onPrimary = DarkOnPrimary,
+    background = DarkBackground,
+    onBackground = DarkOnBackground,
+    surface = Color(0xFF383535), // Fondo de componentes como tarjetas
+    onSurface = Color(0xFFFFFFFF), // Texto en superficies
+    error = Color(0xFFCF6679), // Color de error
+    onError = Color(0xFF000000) // Texto sobre color de error
 )
+
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    primary = LightPrimary,
+    onPrimary = LightOnPrimary,
+    background = LightBackground,
+    onBackground = LightOnBackground,
+    surface = Color(0xFFFAFAEA), // Fondo de componentes como tarjetas
+    onSurface = Color(0xFF000000), // Texto en superficies
+    error = Color(0xFFB00020), // Color de error
+    onError = Color(0xFFFFFFFF) // Texto sobre color de error
 )
+
 
 @Composable
 fun AppAgendaTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

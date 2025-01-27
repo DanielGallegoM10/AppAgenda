@@ -6,14 +6,21 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,6 +39,7 @@ import com.example.appagenda.Componentes.DateTimeField
 import com.example.appagenda.Componentes.Texto
 import com.example.appagenda.Componentes.TextoLargo
 import com.example.appagenda.Componentes.Titulo
+import com.example.appagenda.Componentes.TituloFicha
 import com.example.appagenda.Entidades.EntRegistro
 import com.example.appagenda.ui.theme.AppAgendaTheme
 
@@ -53,11 +61,27 @@ class FichaElemento : ComponentActivity() {
                     var descripcionValor by rememberSaveable { mutableStateOf(descripcion) }
                     var fechaHora by rememberSaveable { mutableStateOf(fechaYHora) }
                     Column(
-                        Modifier.fillMaxSize().background(Color.Cyan),
+                        Modifier
+                            .fillMaxSize(),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Titulo("EDITAR EVENTO")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                            contentDescription = "Volver",
+                            Modifier
+                                .size(70.dp)
+                                .clickable { finish() },
+
+                            )
+                        Row(
+                            Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.Top
+                        ) {
+                            TituloFicha("INFORMACION DEL EVENTO")
+                        }
                         Texto(
                             name = nombre.orEmpty(),
                             labelName = "Nombre del evento",
@@ -87,15 +111,19 @@ class FichaElemento : ComponentActivity() {
                                         }
                                     }
 
-                                    if (registro != null){
-                                        if (registro.codigoRegistro > 0){
+                                    if (registro != null) {
+                                        if (registro.codigoRegistro > 0) {
                                             helper.actualizarRegistro(registro)
-                                        }else{
-                                            registro.codigoRegistro = helper.insertarRegistro(registro).toInt()
+                                        } else {
+                                            registro.codigoRegistro =
+                                                helper.insertarRegistro(registro).toInt()
                                         }
                                         resultIntent.putExtra("id", registro.codigoRegistro)
                                         resultIntent.putExtra("nombreGuardado", registro.nombre)
-                                        resultIntent.putExtra("descripcionGuardada", registro.descripcion)
+                                        resultIntent.putExtra(
+                                            "descripcionGuardada",
+                                            registro.descripcion
+                                        )
                                         resultIntent.putExtra("fechaHoraGuardada", registro.fecha)
                                     }
 
