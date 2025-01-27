@@ -61,19 +61,29 @@ class FichaElemento : ComponentActivity() {
                     var descripcionValor by rememberSaveable { mutableStateOf(descripcion) }
                     var fechaHora by rememberSaveable { mutableStateOf(fechaYHora) }
                     Column(
-                        Modifier
-                            .fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.Top,
+                        horizontalAlignment = Alignment.Start
+
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
                             contentDescription = "Volver",
                             Modifier
-                                .size(70.dp)
+                                .size(50.dp)
                                 .clickable { finish() },
 
                             )
+                    }
+
+                    Column(
+                        Modifier
+                            .fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+
+
                         Row(
                             Modifier
                                 .fillMaxWidth(),

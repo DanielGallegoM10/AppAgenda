@@ -129,7 +129,7 @@ class MainActivity : ComponentActivity() {
                             Icon(
                                 imageVector = Icons.Rounded.AddBox,
                                 contentDescription = "Añadir",
-                                Modifier.size(70.dp).clickable {
+                                Modifier.size(50.dp).clickable {
                                     val intentFicha =
                                         Intent(this@MainActivity, FichaElemento::class.java)
                                     intentFicha.putExtra("id", 0)
