@@ -55,7 +55,7 @@ class FichaElemento : ComponentActivity() {
         val fechaYHora = intent.getStringExtra("fechaHora")
 
         setContent {
-            AppAgendaTheme {
+            AppAgendaTheme (dynamicColor = false) {
                 Surface {
                     var nombre by rememberSaveable { mutableStateOf(nombreIntent) }
                     var descripcionValor by rememberSaveable { mutableStateOf(descripcion) }

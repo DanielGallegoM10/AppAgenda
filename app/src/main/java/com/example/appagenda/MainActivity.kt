@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -29,6 +30,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.AddBox
+import androidx.compose.material.icons.rounded.Android
 import androidx.compose.material.icons.rounded.Brightness2
 import androidx.compose.material.icons.rounded.Brightness5
 import androidx.compose.material3.Button
@@ -39,6 +41,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -60,13 +63,12 @@ import com.example.appagenda.Componentes.ListaDeElementos
 import com.example.appagenda.Componentes.Titulo
 import com.example.appagenda.Entidades.EntRegistro
 import com.example.appagenda.ui.theme.AppAgendaTheme
+import com.example.appagenda.ui.theme.ThemeMode
 import java.util.Date
 
 class MainActivity : ComponentActivity() {
-
     // Lista reactiva de registros
     private val registros = mutableStateListOf<EntRegistro>()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,21 +84,27 @@ class MainActivity : ComponentActivity() {
 
         // Configurar contenido
         setContent {
-            AppAgendaTheme (dynamicColor = true){
+            var themeMode by rememberSaveable { mutableStateOf(ThemeMode.SYSTEM) }
+            AppAgendaTheme (themeMode = themeMode) {
                 Surface {
-
                     Column(
                         Modifier
                             .fillMaxSize()
 
                     ) {
-                        Row(
+                        Row (
                             Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.End,
-                            verticalAlignment = Alignment.Top
+                            verticalAlignment = Alignment.Bottom,
+                            horizontalArrangement = Arrangement.End
                         ){
-                            ThemeSwitcher()
-
+                            ThemeSwitcher(themeMode) { newMode ->
+                                themeMode = newMode
+                            }
+                            if (themeMode == ThemeMode.DARK){
+                                Toast.makeText(this@MainActivity, "Modo oscuro", Toast.LENGTH_SHORT).show()
+                            }else if (themeMode == ThemeMode.LIGHT){
+                                Toast.makeText(this@MainActivity, "Modo claro", Toast.LENGTH_SHORT).show()
+                            }
                         }
                         Row(
                             Modifier
@@ -122,7 +130,6 @@ class MainActivity : ComponentActivity() {
                                     fontFamily = FontFamily.Serif ,
                                 )
                             }
-
                         }
 
                         ListaDeElementos(registros, itemClickado = { registro ->
@@ -211,25 +218,30 @@ class MainActivity : ComponentActivity() {
 
 
     @Composable
-    fun ThemeSwitcher() {
-        // Obtener el valor inicial del tema
-        val isSystemDarkTheme = isSystemInDarkTheme()
-        // Estado mutable para controlar el tema
-        val isDarkTheme = rememberSaveable { mutableStateOf(isSystemDarkTheme) }
-
-        // Aplicar el tema según el estado actual
-        AppAgendaTheme(darkTheme = isDarkTheme.value) {
-            Icon(
-                imageVector = if (isDarkTheme.value) Icons.Rounded.Brightness5 else Icons.Rounded.Brightness2,
-                contentDescription = "Cambiar tema",
-                modifier = Modifier
-                    .size(50.dp)
-                    .clickable {
-                        // Cambiar el estado del tema al opuesto
-                        isDarkTheme.value = !isDarkTheme.value
-                    }
-            )
+    fun ThemeSwitcher(currentMode: ThemeMode, onThemeChange: (ThemeMode) -> Unit) {
+        val nextMode = when (currentMode) {
+            ThemeMode.LIGHT -> ThemeMode.DARK
+            ThemeMode.DARK -> ThemeMode.SYSTEM
+            ThemeMode.SYSTEM -> ThemeMode.LIGHT
         }
+
+        Icon(
+            imageVector = when (currentMode) {
+                ThemeMode.LIGHT -> {
+                    Icons.Rounded.Brightness5
+                }
+                ThemeMode.DARK -> {
+                    Icons.Rounded.Brightness2
+                }
+                ThemeMode.SYSTEM -> {
+                    Icons.Rounded.Android
+                }
+            },
+            contentDescription = "Cambiar tema",
+            modifier = Modifier
+                .size(50.dp)
+                .clickable { onThemeChange(nextMode) }
+        )
     }
 
 
