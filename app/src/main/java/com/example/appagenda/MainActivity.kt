@@ -100,11 +100,6 @@ class MainActivity : ComponentActivity() {
                             ThemeSwitcher(themeMode) { newMode ->
                                 themeMode = newMode
                             }
-                            if (themeMode == ThemeMode.DARK){
-                                Toast.makeText(this@MainActivity, "Modo oscuro", Toast.LENGTH_SHORT).show()
-                            }else if (themeMode == ThemeMode.LIGHT){
-                                Toast.makeText(this@MainActivity, "Modo claro", Toast.LENGTH_SHORT).show()
-                            }
                         }
                         Row(
                             Modifier
@@ -219,28 +214,12 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun ThemeSwitcher(currentMode: ThemeMode, onThemeChange: (ThemeMode) -> Unit) {
-        val nextMode = when (currentMode) {
-            ThemeMode.LIGHT -> ThemeMode.DARK
-            ThemeMode.DARK -> ThemeMode.SYSTEM
-            ThemeMode.SYSTEM -> ThemeMode.LIGHT
-        }
+        val nextMode = if (currentMode == ThemeMode.LIGHT) ThemeMode.DARK else ThemeMode.LIGHT
 
         Icon(
-            imageVector = when (currentMode) {
-                ThemeMode.LIGHT -> {
-                    Icons.Rounded.Brightness5
-                }
-                ThemeMode.DARK -> {
-                    Icons.Rounded.Brightness2
-                }
-                ThemeMode.SYSTEM -> {
-                    Icons.Rounded.Android
-                }
-            },
+            imageVector = if (currentMode == ThemeMode.LIGHT) Icons.Rounded.Brightness2 else Icons.Rounded.Brightness5,
             contentDescription = "Cambiar tema",
-            modifier = Modifier
-                .size(50.dp)
-                .clickable { onThemeChange(nextMode) }
+            modifier = Modifier.size(50.dp).clickable { onThemeChange(nextMode) }
         )
     }
 
