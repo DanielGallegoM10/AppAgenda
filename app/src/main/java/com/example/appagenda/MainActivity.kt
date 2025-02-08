@@ -1,6 +1,7 @@
 package com.example.appagenda
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -51,6 +52,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -84,7 +86,9 @@ class MainActivity : ComponentActivity() {
 
         // Configurar contenido
         setContent {
-            var themeMode by rememberSaveable { mutableStateOf(ThemeMode.SYSTEM) }
+            var themeMode by rememberSaveable { mutableStateOf(ThemePreferences.getTheme(this)) }
+            val context = LocalContext.current
+
             AppAgendaTheme(themeMode = themeMode) {
                 Surface {
                     Column(
@@ -115,7 +119,9 @@ class MainActivity : ComponentActivity() {
                             }
                             ThemeSwitcher(themeMode) { newMode ->
                                 themeMode = newMode
+                                ThemePreferences.saveTheme(context, newMode)
                             }
+
                         }
                         Row(
                             Modifier
