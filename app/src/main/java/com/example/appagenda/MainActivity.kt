@@ -85,18 +85,34 @@ class MainActivity : ComponentActivity() {
         // Configurar contenido
         setContent {
             var themeMode by rememberSaveable { mutableStateOf(ThemeMode.SYSTEM) }
-            AppAgendaTheme (themeMode = themeMode) {
+            AppAgendaTheme(themeMode = themeMode) {
                 Surface {
                     Column(
                         Modifier
                             .fillMaxSize()
 
                     ) {
-                        Row (
-                            Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.Bottom,
+                        Row(
+                            Modifier.fillMaxWidth().height(50.dp),
+                            verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.End
-                        ){
+                        ) {
+                            Box(
+                                modifier = Modifier.padding(end = 290.dp),
+
+                                ) {
+                                Icon(
+                                    imageVector = Icons.Rounded.AddBox,
+                                    contentDescription = "Añadir",
+                                    modifier = Modifier
+                                        .size(50.dp)
+                                        .clickable {
+                                            val intentFicha = Intent(this@MainActivity, FichaElemento::class.java)
+                                            intentFicha.putExtra("id", 0)
+                                            fichaLauncher.launch(intentFicha)
+                                        }
+                                )
+                            }
                             ThemeSwitcher(themeMode) { newMode ->
                                 themeMode = newMode
                             }
@@ -110,19 +126,21 @@ class MainActivity : ComponentActivity() {
                         ) {
                             Titulo("MY AGENDA")
                         }
-                        Row (Modifier
-                            .fillMaxWidth()
-                            .height(30.dp),
+                        Row(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(30.dp),
                             horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.Top){
+                            verticalAlignment = Alignment.Top
+                        ) {
 
-                            if (registros.isEmpty()){
+                            if (registros.isEmpty()) {
                                 Text(
                                     text = "Añade aqui tus eventos",
                                     fontSize = 20.sp,
                                     fontWeight = FontWeight.Bold,
                                     textAlign = TextAlign.Center,
-                                    fontFamily = FontFamily.Serif ,
+                                    fontFamily = FontFamily.Serif,
                                 )
                             }
                         }
@@ -136,28 +154,19 @@ class MainActivity : ComponentActivity() {
 
                             fichaLauncher.launch(intentFicha) // Abrir actividad de edición
                         })
-                        Row(
-                            Modifier
-                                .fillMaxSize()
-                                .height(50.dp)
-                                .padding(30.dp),
-                            verticalAlignment = Alignment.Bottom,
-                            horizontalArrangement = Arrangement.End
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.AddBox,
-                                contentDescription = "Añadir",
-                                Modifier.size(50.dp).clickable {
-                                    val intentFicha =
-                                        Intent(this@MainActivity, FichaElemento::class.java)
-                                    intentFicha.putExtra("id", 0)
-
-                                    fichaLauncher.launch(intentFicha) // Abrir actividad de edición
-                                }
-                            )
-
-                        }
                     }
+//                    Row(
+//                        Modifier
+//                            .fillMaxSize()
+//                            .height(50.dp)
+//                            .padding(30.dp),
+//                        verticalAlignment = Alignment.Bottom,
+//                        horizontalArrangement = Arrangement.End
+//                    ) {
+//
+//
+//                    }
+
                 }
             }
         }
@@ -219,11 +228,11 @@ class MainActivity : ComponentActivity() {
         Icon(
             imageVector = if (currentMode == ThemeMode.LIGHT) Icons.Rounded.Brightness2 else Icons.Rounded.Brightness5,
             contentDescription = "Cambiar tema",
-            modifier = Modifier.size(50.dp).clickable { onThemeChange(nextMode) }
+            modifier = Modifier
+                .size(50.dp)
+                .clickable { onThemeChange(nextMode) }
         )
     }
-
-
 
 
 }
