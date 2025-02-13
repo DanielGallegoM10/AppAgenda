@@ -41,9 +41,8 @@ android {
 }
 
 dependencies {
-    implementation("androidx.compose.ui:ui-text-google-fonts:1.5.1")
-    implementation ("androidx.compose.material:material-icons-extended:1.7.6")
-    implementation (files("libs/GestionAgenda.jar"))
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.7.8")
+    implementation ("androidx.compose.material:material-icons-extended:1.7.8")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -61,6 +60,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("androidx.constraintlayout:constraintlayout-compose-android:1.1.0")
-    implementation ("androidx.navigation:navigation-compose:2.7.2")
+    implementation ("androidx.navigation:navigation-compose:2.8.7")
 
 }
