@@ -9,8 +9,9 @@ import androidx.compose.ui.graphics.Color
 //val Purple40 = Color(0xFF6650a4)
 //val PurpleGrey40 = Color(0xFF625b71)
 //val Pink40 = Color(0xFF7D5260)
+//0xFFBBDEFB
 
-val LightPrimary = Color(0xFFBBDEFB)//Color de la tarjeta
+val LightPrimary = Color(0xFF7AC0F8)//Color de la tarjeta
 val LightOnPrimary = Color(0xFF000000)
 val LightBackground = Color(0xFFF5F5F5)
 val LightOnBackground = Color(0xFF000000)

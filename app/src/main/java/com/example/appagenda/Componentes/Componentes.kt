@@ -1,13 +1,17 @@
 package com.example.appagenda.Componentes
 
+import PreferencesManager
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +29,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Visibility
 import androidx.compose.material.icons.rounded.VisibilityOff
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +42,13 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -55,6 +67,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.appagenda.Entidades.EntRegistro
 import com.example.appagenda.R
+import com.example.appagenda.ui.theme.ThemeMode
+import kotlinx.coroutines.launch
 import java.sql.Date
 import java.util.Calendar
 
@@ -94,44 +108,41 @@ fun TituloFicha(titulo: String) {
     }
 }
 
-//@Composable
-//fun ListaDeElementos(){
-//    val scrollState = rememberScrollState()
-//    Column(Modifier.verticalScroll(scrollState)) {
-//        Titulo("Agenda")
-//        Titulo("Agenda")
-//        Titulo("Agenda")
-//        Titulo("Agenda")
-//        Titulo("Agenda")
-//        Titulo("Agenda")
-//        Titulo("Agenda")
-//        Titulo("Agenda")
-//        Titulo("Agenda")
-//        Titulo("Agenda")
-//        Titulo("Agenda")
-//        Titulo("Agenda")
-//        Titulo("Agenda")
-//        Titulo("Agenda")
-//        Titulo("Agenda")
-//        Titulo("Agenda")
-//        Titulo("Agenda")
-//
-//    }
-//}
-
 @Composable
 fun ListaDeElementos(registros: List<EntRegistro>, itemClickado: (EntRegistro) -> Unit) {
+    // Mantenemos un estado independiente para cada checkbox en el mapa
+    val checkboxStates = remember { mutableStateMapOf<Int, Boolean>() }
+
     LazyColumn {
         items(registros, key = { it.codigoRegistro }) { registro ->
-            Column() {
-                Elemento(registro, itemClickado)
+            if (!checkboxStates.containsKey(registro.codigoRegistro)) {
+                checkboxStates[registro.codigoRegistro] = false
+            }
+
+            Column {
+                Elemento(
+                    registro = registro,
+                    itemClickado = itemClickado,
+                    isChecked = checkboxStates[registro.codigoRegistro] ?: false,
+                    onCheckedChange = { isChecked ->
+                        // Actualizar el estado de ese checkbox específico
+                        checkboxStates[registro.codigoRegistro] = isChecked
+                    }
+                )
             }
         }
     }
 }
 
 @Composable
-fun Elemento(registro: EntRegistro, itemClickado: (EntRegistro) -> Unit) {
+fun Elemento(
+    registro: EntRegistro,
+    itemClickado: (EntRegistro) -> Unit,
+    isChecked: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    val context = LocalContext.current
+
     var expanded by rememberSaveable { mutableStateOf(false) }
     val extraPadding by animateDpAsState(
         if (expanded) 48.dp else 0.dp, animationSpec = spring(
@@ -142,9 +153,9 @@ fun Elemento(registro: EntRegistro, itemClickado: (EntRegistro) -> Unit) {
 
     Surface(
         color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp).clickable {
-            itemClickado(registro)
-        }
+        modifier = Modifier
+            .padding(vertical = 4.dp, horizontal = 8.dp)
+            .clickable { itemClickado(registro) }
     ) {
         Row(modifier = Modifier.padding(24.dp)) {
             Column(
@@ -160,38 +171,65 @@ fun Elemento(registro: EntRegistro, itemClickado: (EntRegistro) -> Unit) {
                 )
                 if (expanded) {
                     Text(
-                        text = registro.descripcion, // Asegúrate de que 'registro' tenga este campo
+                        text = registro.descripcion,
                         style = MaterialTheme.typography.bodyLarge,
                         modifier = Modifier.padding(top = 8.dp)
                     )
                 }
             }
-            if (!expanded) {
+            Column(
+                modifier = Modifier.align(Alignment.CenterVertically)
+            ) {
                 Icon(
-                    imageVector = Icons.Rounded.Visibility,
-                    contentDescription = "Ver mas",
-                    Modifier
+                    imageVector = if (expanded) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility,
+                    contentDescription = "Ver más",
+                    modifier = Modifier
                         .height(50.dp)
                         .width(40.dp)
-                        .clickable {
-                            expanded = !expanded
-                        }
+                        .clickable { expanded = !expanded }
                 )
-            } else {
-                Icon(
-                    imageVector = Icons.Rounded.VisibilityOff,
-                    contentDescription = "Ver mas",
-                    Modifier
-                        .height(50.dp)
-                        .width(40.dp)
-                        .clickable {
-                            expanded = !expanded
-                        }
+
+                CheckboxScreen(
+                    context = context,
+                    codigoRegistro = registro.codigoRegistro,
+                    state = remember { mutableStateOf(isChecked) },
+                    onCheckedChange = onCheckedChange
                 )
             }
         }
     }
+}
 
+@Composable
+fun CheckboxScreen(
+    context: Context,
+    codigoRegistro: Int,
+    state: MutableState<Boolean>,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    val coroutineScope = rememberCoroutineScope()
+
+    val savedState = remember { mutableStateOf(PreferencesManager.getCheckboxState(context, codigoRegistro)) }
+    LaunchedEffect(savedState.value) {
+        state.value = savedState.value
+    }
+
+    Checkbox(
+        checked = state.value,
+        onCheckedChange = { isChecked ->
+            state.value = isChecked
+            onCheckedChange(isChecked)
+            coroutineScope.launch {
+                PreferencesManager.saveCheckboxState(context, codigoRegistro, isChecked)
+            }
+        },
+        enabled = true,
+        colors = CheckboxDefaults.colors(
+            checkedColor = Color.Green,
+            uncheckedColor = Color.Green,
+            checkmarkColor = Color.Blue
+        )
+    )
 }
 
 @Composable
@@ -209,7 +247,6 @@ fun TextoLargo(name: String, labelName: String, onValueChange: (String) -> Unit)
             .padding(20.dp),
         label = { Text(text = labelName) })
 }
-
 
 @Composable
 fun DateTimeField(selectedDateTime: String, onValueChange: (String) -> Unit) {
@@ -288,7 +325,7 @@ fun VerComponentes() {
 //        ListaDeElementos(registros, itemClickado = {})
 //                var name by rememberSaveable { mutableStateOf("") }
 //                TextoLargo(name = name, labelName = "Dime el nombre del evento", onValueChange = {})
-            Elemento(registro, itemClickado = {})
+//            Elemento(registro, itemClickado = {})
         }
 
 

@@ -41,6 +41,7 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
     implementation("androidx.compose.ui:ui-text-google-fonts:1.7.8")
     implementation ("androidx.compose.material:material-icons-extended:1.7.8")
     implementation(libs.androidx.core.ktx)
