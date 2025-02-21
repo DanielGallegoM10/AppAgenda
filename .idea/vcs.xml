@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/../../1ºDAW/LENGUAJE DE MARCAS/2º Trimestre/JS" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../1ºDAW/LENGUAJE DE MARCAS/2º Trimestre/JS/Valida Formularios" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/1ºTrimestre/TEMA-JAXB/BibliotecaJAXB" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/1ºTrimestre/TEMA-JAXB/Ejercicios-JAXB" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/1ºTrimestre/TEMA-JAXB/EmpleadosJAXB" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/1ºTrimestre/TEMA-JAXB/ejercicios-liga-jaxb-DanielGallegoM10" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/1ºTrimestre/TEMA-JAXB/examen-jaxb-20241202-DanielGallegoM10" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/1ºTrimestre/TEMA1XML-SAX/ejercicios-con-sax-DanielGallegoM10" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/1ºTrimestre/TEMA1XML-SAX/examen-sax-20241107-DanielGallegoM10" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/2ºTrimestre/EjerciciosConectoresSQL" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/2ºTrimestre/Tema-ConectoresBDD/BibliotecaTipoExamen" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/2ºTrimestre/Tema-ConectoresBDD/EjercicoFacturas" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/2ºTrimestre/Tema-ConectoresBDD/GestionGimnasio" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/2ºTrimestre/Tema-ConectoresBDD/cinesvdo-DanielGallegoM10" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/2ºTrimestre/Tema-ConectoresBDD/cinesvdo2-entrega-DanielGallegoM10" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/2ºTrimestre/Tema-Hibernate-JPA/ConsultasWorld" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/2ºTrimestre/Tema-Hibernate-JPA/EjemplosHibernate" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/2ºTrimestre/Tema-Hibernate-JPA/VirreyFlix" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/2ºTrimestre/Tema-Hibernate-JPA/spring" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Acceso a Datos/proyecto-spring-DanielGallegoM10" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Desarrollo de Interfaces/1ºTrimestre/KOTLIN/OOP-IN-KOTLIN" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../2ºDAM/Desarrollo de Interfaces/1ºTrimestre/KOTLIN/UT1_Tarea_Final_DanielGallego" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../AndroidDesarrolloInterfaces/Android-Development-with-Kotlin" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../AndroidDesarrolloInterfaces/BasicCodeLab" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../AndroidDesarrolloInterfaces/ComposeBasicExercises" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../AndroidDesarrolloInterfaces/ComposeCatalog" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../AndroidDesarrolloInterfaces/L4_AndroidStudio_1" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../AndroidDesarrolloInterfaces/L5_DataBinding" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../AndroidDesarrolloInterfaces/Task1_Unit2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../CursoHTML-CSS" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../CursoPython/Curso-PythonDesdeCero" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../PEN/1ºDAW/LENGUAJE DE MARCAS/2º Trimestre/JS" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../PEN/1ºDAW/LENGUAJE DE MARCAS/2º Trimestre/JS/Valida Formularios" vcs="Git" />
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../ProyectosAndroid/APIRestDanielG" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../ProyectosAndroid/EjercicioApiRest" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../ProyectosAndroid/Proyecto-AppIncidencias" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../../TaskManager" vcs="Git" />
   </component>
 </project>
